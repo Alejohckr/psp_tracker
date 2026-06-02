@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:5175)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5175)",
+      "Bash(npx playwright *)",
+      "Read(//private/tmp/**)",
+      "Bash(npm init *)",
+      "Bash(node psp_test.mjs)",
+      "Bash(pkill -f \"vite --port 5175\")",
+      "Bash(cat)",
+      "Bash(node psp_tour.mjs)"
+    ]
+  }
+}
