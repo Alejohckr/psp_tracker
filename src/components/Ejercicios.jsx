@@ -74,7 +74,7 @@ export default function Ejercicios() {
   async function handleAdd() {
     setSaving(true)
     setError('')
-    const payload = { ...form }
+    const payload = { ...form, user_id: user.id }
     numFields.forEach(k => { payload[k] = Number(payload[k]) || 0 })
     const { data, error: err } = await supabase.from('ejercicios').insert(payload).select().single()
     if (err) { setError(err.message) } else {

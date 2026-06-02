@@ -46,7 +46,7 @@ export default function PlanPruebas() {
   async function handleAdd() {
     setSaving(true)
     setError('')
-    const { data, error: err } = await supabase.from('plan_pruebas').insert(form).select().single()
+    const { data, error: err } = await supabase.from('plan_pruebas').insert({ ...form, user_id: user.id }).select().single()
     if (err) { setError(err.message) } else {
       setRows([...rows, data])
       setForm(EMPTY)

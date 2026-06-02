@@ -95,7 +95,7 @@ export default function PlanSemanal() {
   async function addRow() {
     setSaving(true)
     setError('')
-    const { data, error: err } = await supabase.from('project_plan').insert(addForm).select().single()
+    const { data, error: err } = await supabase.from('project_plan').insert({ ...addForm, user_id: user.id }).select().single()
     if (err) { setError(err.message) } else {
       setRows([...rows, data])
       setShowAdd(false)

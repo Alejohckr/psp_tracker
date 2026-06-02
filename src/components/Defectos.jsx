@@ -52,7 +52,7 @@ export default function Defectos() {
   async function handleAdd() {
     setSaving(true)
     setError('')
-    const payload = { ...form, tiempo_correccion_min: Number(form.tiempo_correccion_min) || 0 }
+    const payload = { ...form, user_id: user.id, tiempo_correccion_min: Number(form.tiempo_correccion_min) || 0 }
     const { data, error: err } = await supabase.from('defectos').insert(payload).select().single()
     if (err) { setError(err.message) } else {
       setRows([data, ...rows])

@@ -52,6 +52,7 @@ export default function RegistroPSP() {
     setError('')
     const payload = {
       ...form,
+      user_id: user.id,
       tiempo_planeado_min: Number(form.tiempo_planeado_min) || 0,
       tiempo_real_min: Number(form.tiempo_real_min) || 0,
       tiempo_interrupcion_min: Number(form.tiempo_interrupcion_min) || 0,
