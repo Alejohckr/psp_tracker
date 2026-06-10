@@ -33,30 +33,31 @@ export default function Dashboard({ onNavigate }) {
 
   useEffect(() => {
     if (!user) return
+
+    async function fetchMetrics() {
+      setLoading(true)
+      const [regResult, ejercResult, defResult] = await Promise.all([
+        supabase.from('psp_registro').select('tiempo_planeado_min, tiempo_real_min, desfase, fase, fecha').order('fecha', { ascending: false }),
+        supabase.from('ejercicios').select('loc_reales'),
+        supabase.from('defectos').select('estado'),
+      ])
+
+      const registros = regResult.data || []
+      const ejercicios = ejercResult.data || []
+      const defectos = defResult.data || []
+
+      const desfase = registros.reduce((acc, r) => acc + (r.desfase || 0), 0)
+      const tiempoTotal = registros.reduce((acc, r) => acc + (r.tiempo_real_min || 0), 0)
+      const loc = ejercicios.reduce((acc, e) => acc + (e.loc_reales || 0), 0)
+      const defectosAbiertos = defectos.filter(d => d.estado === 'Abierto').length
+
+      setMetrics({ desfase, loc, defectosAbiertos, tiempoTotal })
+      setRecentRegistros(registros.slice(0, 5))
+      setLoading(false)
+    }
+
     fetchMetrics()
   }, [user])
-
-  async function fetchMetrics() {
-    setLoading(true)
-    const [regResult, ejercResult, defResult] = await Promise.all([
-      supabase.from('psp_registro').select('tiempo_planeado_min, tiempo_real_min, desfase, fase, fecha').order('fecha', { ascending: false }),
-      supabase.from('ejercicios').select('loc_reales'),
-      supabase.from('defectos').select('estado'),
-    ])
-
-    const registros = regResult.data || []
-    const ejercicios = ejercResult.data || []
-    const defectos = defResult.data || []
-
-    const desfase = registros.reduce((acc, r) => acc + (r.desfase || 0), 0)
-    const tiempoTotal = registros.reduce((acc, r) => acc + (r.tiempo_real_min || 0), 0)
-    const loc = ejercicios.reduce((acc, e) => acc + (e.loc_reales || 0), 0)
-    const defectosAbiertos = defectos.filter(d => d.estado === 'Abierto').length
-
-    setMetrics({ desfase, loc, defectosAbiertos, tiempoTotal })
-    setRecentRegistros(registros.slice(0, 5))
-    setLoading(false)
-  }
 
   const ClockIcon = (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
